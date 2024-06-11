@@ -1,30 +1,32 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-export default function Produto({ title, image, description, price, category, rating }) {
+export default function Produto({ getPessoaId, pessoaId, pessoaFoto, pessoaNome, setDetalhes}) {
     return (
         <View style={css.container}>
             <View style={css.boxTitle}>
-                <View style={css.circleAvatar}></View>
-                <Text style={css.title}>{title}</Text>
+                <View style={css.circleAvatar}> 
+                    <Image source={{ uri: pessoaFoto}} style={css.imagem}/>
+                </View>
+                <Text style={css.title}>{pessoaNome}</Text>
             </View>
             <View style={css.boxImage}>
-                <Image source={{ uri: image }} style={css.imagem}/>
-            </View>
-            <View style={css.descriptionBox}>
-                <Text style={css.descriptionText}>{description}</Text>
-            </View>
-            <View style={css.categoryBox}>
-                <Text style={css.categoryText}>{category}</Text>
-            </View>
-            
+                <Image source={{ uri: pessoaFoto }} style={css.imagem}/>
+            </View> 
+
+            <TouchableOpacity onPress={()=> {setDetalhes(false); getPessoaId(pessoaId)}} style={css.btnDelete}>
+                    <Text  style={css.btbLoginText}>Detalhes</Text>
+            </TouchableOpacity>
+
         </View>
     )
 }
 const css = StyleSheet.create({
     container: {
-        width: "100%",
-        height: 600
+        width: 350,
+        height: 600,
+        backgroundColor:"white",
+        marginBottom: 25,
     },
     boxTitle: {
         width: "100%",
@@ -43,7 +45,7 @@ const css = StyleSheet.create({
         marginRight: 10
     },
     title: {
-        color: "white",
+        color: "black",
         textAlign: "center"
     },
     boxImage: {
@@ -74,5 +76,21 @@ const css = StyleSheet.create({
     },
     categoryText: {
         color: "white"
-    }
+    },
+    btnDelete:{
+        width:200,
+        height: 50,
+        margin:20,
+        borderRadius:10,
+        backgroundColor:"#13293D",
+        display: "flex",
+        justifyContent:"center",
+        alignItems:"center",
+        marginBottom:120,
+      },
+      btbLoginText:{
+        color:"white",
+        fontSize:30,
+        fontWeight:"850"
+      },
 })
