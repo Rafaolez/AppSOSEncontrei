@@ -14,7 +14,7 @@ export default function Produto({ getPessoaId, pessoaId, pessoaFoto, pessoaNome,
                 <Image source={{ uri: pessoaFoto }} style={css.imagem}/>
             </View> 
 
-            <TouchableOpacity onPress={()=> {setDetalhes(false); getPessoaId(pessoaId)}} style={css.btnDelete}>
+            <TouchableOpacity onPress={()=> {setDetalhes(false);  getPessoaId(pessoaId)}} style={css.btnDelete}>
                     <Text  style={css.btbLoginText}>Detalhes</Text>
             </TouchableOpacity>
 

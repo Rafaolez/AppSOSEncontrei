@@ -7,12 +7,11 @@ export default function Login() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
 
-    const { Login, error } = useContext(AuthContext);
+    const { Login, error, setCadastrar } = useContext(AuthContext);
 
     function RealizaLogin() {
-       Login( email, senha );
+        Login(email, senha);
     }
-
 
     return (
         <ScrollView contentContainerStyle={css.container}>
@@ -40,11 +39,15 @@ export default function Login() {
             <TouchableOpacity style={css.btnLogin} onPress={RealizaLogin}>
                 <Text style={css.btnLoginText}>Log In</Text>
             </TouchableOpacity>
+            <TouchableOpacity style={css.btnLogin} onPress={ () => setCadastrar( true ) }>
+                <Text style={css.btnLoginText}>Cadastro</Text>
+            </TouchableOpacity>
             {error &&
                 <View style={css.error}>
                     <Text style={css.errorText}>Revise os campos. Tente novamente!</Text>
                 </View>
             }
+
         </ScrollView>
     )
 }
@@ -103,5 +106,8 @@ const css = StyleSheet.create({
     errorText: {
         color: "white",
         textAlign: "center"
+    },
+    TextoTeste: {
+        color: "red",
     }
 });

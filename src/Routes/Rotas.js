@@ -11,17 +11,25 @@ import Login from '../Pages/Login';
 import Videos from '../Pages/Videos';
 import Perfil from '../Pages/Perfil';
 import Inserir from '../Pages/Inserir';
+import Cadastro from '../Components/Cadastro';
+import { Text } from 'react-native';
 
 
 const Tab = createBottomTabNavigator();
 
 export default function Rotas() {
 
-    const { logado } = useContext(AuthContext);
+    const { logado , cadastrar } = useContext(AuthContext);
 
-    if (!logado) {
-        return (<Login />)
+    
+    if (!logado && !cadastrar ) {
+        return ( <Login />)
     }
+
+    if( !logado && cadastrar ) {
+        return( <Cadastro /> )
+    }
+    
 
     return (
         <NavigationContainer>
