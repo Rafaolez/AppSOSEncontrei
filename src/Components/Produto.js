@@ -1,21 +1,21 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 
-export default function Produto({ getPessoaId, pessoaId, pessoaFoto, pessoaNome, setDetalhes}) {
+export default function Produto({ getObservação, getPessoaId, pessoaId, pessoaFoto, pessoaNome, setDetalhes, observacoesId }) {
     return (
         <View style={css.container}>
             <View style={css.boxTitle}>
-                <View style={css.circleAvatar}> 
-                    <Image source={{ uri: pessoaFoto}} style={css.imagem}/>
+                <View style={css.circleAvatar}>
+                    <Image source={{ uri: pessoaFoto }} style={css.imagem} />
                 </View>
                 <Text style={css.title}>{pessoaNome}</Text>
             </View>
             <View style={css.boxImage}>
-                <Image source={{ uri: pessoaFoto }} style={css.imagem}/>
-            </View> 
+                <Image source={{ uri: pessoaFoto }} style={css.imagemG} />
+            </View>
 
-            <TouchableOpacity onPress={()=> {setDetalhes(false);  getPessoaId(pessoaId)}} style={css.btnDelete}>
-                    <Text  style={css.btbLoginText}>Detalhes</Text>
+            <TouchableOpacity onPress={() => { setDetalhes(false); getPessoaId(pessoaId); getObservação(pessoaId) }} style={css.btnDelete}>
+                <Text style={css.btbLoginText}>Detalhes</Text>
             </TouchableOpacity>
 
         </View>
@@ -25,8 +25,8 @@ const css = StyleSheet.create({
     container: {
         width: 350,
         height: 600,
-        backgroundColor:"white",
-        marginBottom: 25,
+        backgroundColor: "white",
+        marginTop: 25,
     },
     boxTitle: {
         width: "100%",
@@ -38,24 +38,33 @@ const css = StyleSheet.create({
         paddingLeft: 5
     },
     circleAvatar: {
-        width: 30,
-        height: 30,
+        width: 50,
+        height: 50,
         borderRadius: 50,
         backgroundColor: "white",
         marginRight: 10
     },
     title: {
         color: "black",
-        textAlign: "center"
+        textAlign: "center",
+        marginTop: 20,
+        fontSize:30,
     },
     boxImage: {
         width: "100%",
         height: 390
     },
+    imagemG: {
+        width: "100%",
+        height: "100%",
+        resizeMode: "cover",
+    },
     imagem: {
         width: "100%",
         height: "100%",
-        resizeMode: "cover"
+        resizeMode: "cover",
+        borderRadius: 50,
+        marginTop: 10,
     },
     categoryBox: {
         width: "100%",
@@ -77,20 +86,20 @@ const css = StyleSheet.create({
     categoryText: {
         color: "white"
     },
-    btnDelete:{
-        width:200,
+    btnDelete: {
+        width: 200,
         height: 50,
-        margin:20,
-        borderRadius:10,
-        backgroundColor:"#13293D",
+        margin: 58,
+        borderRadius: 10,
+        backgroundColor: "#191919",
         display: "flex",
-        justifyContent:"center",
-        alignItems:"center",
-        marginBottom:120,
-      },
-      btbLoginText:{
-        color:"white",
-        fontSize:30,
-        fontWeight:"850"
-      },
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 120,
+    },
+    btbLoginText: {
+        color: "white",
+        fontSize: 30,
+        fontWeight: "850"
+    },
 })

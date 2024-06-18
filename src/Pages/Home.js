@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Produto from '../Components/Produto';
-import Stories from '../Components/Stories';
 import Detalheses from '../Components/Detalhes';
+import CadastroOB from '../Components/CadastroOB';
 
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
   const [pessoaStatus, setPessoaStatus] = useState([]);
   const [usuarioId, setUsuarioId] = useState([]);
 
-  const [observacoesId, setobservacoesId] = useState([]);
+  const [observacoes, setobservacoes] = useState([]);
   const [observacoesDescricao, setobservacoesDescricao] = useState([]);
   const [observacoesLocal, setobservacoesLocal] = useState([]);
   const [observacoesData, setobservacoesData] = useState([]);
@@ -70,8 +70,9 @@ export default function Home() {
       .catch(err => console.log(err))
   }
 
-  async function getObservação() {
-    await fetch('http://10.139.75.31:5251/api/ObservacaoesControler/GetAllPessoa', {
+  async function getObservação(id) {
+    console.log(id);
+    await fetch('http://10.139.75.31:5251/api/ObservacaoesControler/GetObservacaoPessoaId/' + id, {
       method: 'GET',
       headers: {
         'content-type': 'application/json'
@@ -79,19 +80,15 @@ export default function Home() {
     })
       .then(res => res.json())
       .then(json => {
-        setobservacoesId(json.observacoesId);
-        setobservacoesDescricao(json.observacoesDescricao);
-        setobservacoesLocal(json.observacoesLocal);
-        setobservacoesData(json.observacoesData);
-        setusuarioId(json.usuarioId);
-        setpessoaId(json.pessoaId);
+        setobservacoes(json);
       })
       .catch(err => console.log(err))
   }
 
   useEffect(() => {
     getPessoa();
-    getPessoaId()
+    getPessoaId();
+    getObservação();
 
   }, [])
 
@@ -99,19 +96,22 @@ export default function Home() {
     <View style={css.container}>
       {detalhes ?
         <>
-          <Stories produtos={pessoa} />
+          <View style={css.logo}>
+            <Image source={require("../../assets/LogoApp.png")} style={css.logoImg} />
+          </View>
+          <Text style={css.titulos}>Pessoa desaparecidas:</Text>
           <FlatList
             data={pessoa}
-            renderItem={({ item }) => <Produto getPessoaId={getPessoaId} pessoaNome={item.pessoaNome} pessoaFoto={item.pessoaFoto} pessoaId={item.pessoaId} setDetalhes={setDetalhes} />}
+            renderItem={({ item }) => <Produto getPessoaId={getPessoaId} getObservação={getObservação} observacoesId={item.observacoesId} pessoaNome={item.pessoaNome} pessoaFoto={item.pessoaFoto} pessoaId={item.pessoaId} setDetalhes={setDetalhes} />}
             keyExtractor={(item) => item.pessoaId}
-            contentContainerStyle={{ height: (pessoa.length * 600) + 110 }}
+            contentContainerStyle={{ height: (pessoa.length * 600) + 200 }}
           />
         </>
         :
         <View>
           {observacao ?
             <>
-              <View>
+              <ScrollView>
                 <TouchableOpacity onPress={() => { setDetalhes(true); getPessoaId }} style={css.btnDelete}>
                   <Text style={css.btbLoginText}>❮</Text>
                 </TouchableOpacity>
@@ -119,7 +119,7 @@ export default function Home() {
                   <View style={css.boxImage}>
                     <Image source={{ uri: pessoaFoto }} style={css.imagem} />
                   </View>
-                  <Text style={css.pessoaNome}>{pessoaNome}</Text>
+                  <Text style={css.pessoaNome01}>{pessoaNome}</Text>
                   <Text style={css.pessoaNome}>{pessoaRoupa}</Text>
                   <Text style={css.pessoaNome}>{pessoaCor}</Text>
                   <Text style={css.pessoaNome}>{pessoaSexo}</Text>
@@ -128,31 +128,31 @@ export default function Home() {
                   <Text style={css.pessoaNome}>{pessoaDtDesaparecimento}</Text>
                   <Text style={css.pessoaNome}>{pessoaDtEncontro}</Text>
                   <Text style={css.pessoaNome}>{pessoaStatus}</Text>
-                  <Text style={css.pessoaNome}>{usuarioId}</Text>
-                </View>
-               
-                <View style={css.caixamaior}>
-                  <Text style={css.pessoaNome}>{observacoesId}</Text>
-                  <Text style={css.pessoaNome}>{observacoesDescricao}</Text>
-                  <Text style={css.pessoaNome}>{observacoesLocal}</Text>
-                  <Text style={css.pessoaNome}>{observacoesData}</Text>
-                  <Text style={css.pessoaNome}>{usuarioIdOB}</Text>
-                  <Text style={css.pessoaNome}>{pessoaIdOB}</Text>
-                </View>
-
-                <TouchableOpacity onPress={() => { setObservacao(true); getPessoaId }} style={css.btnObservacao}>
+                </View>    
+                <TouchableOpacity onPress={() => { setObservacao(false); getObservação }} style={css.btnObservacao}>
                   <Text style={css.btbLoginText}>Nova Observção</Text>
                 </TouchableOpacity>
-              </View>
+              </ScrollView>
+              <View style={css.caixaMAiorOb}>
+                  <Text style={css.textOb}>Observação:</Text>
+                  <FlatList
+                    data={observacoes}
+                    renderItem={({ item }) =>
+                      <View>
+                        <Text style={css.textOb}>{item.observacoesDescricao}</Text>
+                        <Text style={css.textOb}>{item.observacoesLocal}</Text>
+                        <Text style={css.pessoaNomeOb}>{item.observacoesData}</Text>
+                        <Text style={css.pessoaNomeOb}>{item.usuarioId}</Text>
+                        <Text style={css.pessoaNomeOb}>{item.pessoaId}</Text>
+                      </View>
+                    }
+                    keyExtractor={(item) => item.observacoesId}                    
+                  />
+                </View>
             </>
             :
             <>
-              <View style={css.caixaMAiorOb}>
-
-              </View>
-              <TouchableOpacity onPress={() => { setObservacao(false); getPessoaId }} style={css.btnObservacaoVota}>
-                <Text style={css.btbLoginText}>❮</Text>
-              </TouchableOpacity>
+              <CadastroOB setObservacao={setObservacao} getPessoaId={getPessoaId} usuarioId={usuarioId} pessoaId={pessoaId} />
             </>}
         </View>
       }
@@ -163,9 +163,7 @@ export default function Home() {
 
 const css = StyleSheet.create({
   container: {
-    backgroundColor: "red",
     flexGrow: 1,
-    color: "white",
     justifyContent: "center",
     alignItems: "center"
   },
@@ -177,25 +175,37 @@ const css = StyleSheet.create({
     width: 100,
     height: 50,
     borderRadius: 10,
-    backgroundColor: "#13293D",
+    backgroundColor: "#191919",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 10,
-    marginLeft: -10,
+    marginTop: 50,
+    marginBottom: 15,
+    marginRight: 250,
   },
   btbLoginText: {
     color: "white",
     fontSize: 30,
-    //fontWeight: "850"
+  },
+  pessoaNomeOb: {
+    color:"black",
+  },
+  pessoaNome01: {
+    marginTop: -90,
+    fontSize: 15,
+    marginLeft: 15,
   },
   pessoaNome: {
-    color: "white"
+    fontSize: 15,
+    marginLeft: 15,
   },
-
+  textOb: {
+    fontSize: 20,
+    marginLeft: 25,
+  },
   imagem: {
-    width: "90%",
-    height: "50%",
+    width: "100%",
+    height: "70%",
     resizeMode: "cover",
     backgroundColor: "white",
   },
@@ -203,30 +213,43 @@ const css = StyleSheet.create({
     width: 300,
     height: 50,
     borderRadius: 10,
-    backgroundColor: "#13293D",
+    backgroundColor: "#191919",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    // marginBottom: 150,
+    margin: 20,
+
   },
   caixamaior: {
-    width: "90%",
-    backgroundColor: "blue"
+    width: "100%",
+    height: 650,
+    backgroundColor: "white"
   },
-  btnObservacaoVota: {
-    width: 100,
-    height: 50,
-    borderRadius: 10,
-    backgroundColor: "#13293D",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 10,
-    marginLeft: -10,
-  },
+
   caixaMAiorOb: {
     width: 200,
     height: 200,
-    backgroundColor: "white"
-  }
+    backgroundColor: "white",
+    marginTop: 25,
+  },
+  logo: {
+    width: "100%",
+    height: 100,
+    backgroundColor: "#191919",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  logoescrita: {
+    fontSize: 60,
+  },
+  logoImg: {
+    width: 90,
+    height: 90,
+    marginTop: 25,
+  },
+  titulos: {
+    fontSize: 25,
+    marginTop: 20,
+  },
 })

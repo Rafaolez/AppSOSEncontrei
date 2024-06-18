@@ -4,36 +4,37 @@ import { Alert } from "react-native";
 export const AuthContext = createContext(0);
 
 function AuthProvider({ children }) {
-    const [logado, setLogado] = useState(true);
-    const [error, setError] = useState(false);
     const [cadastrar, setCadastrar ] = useState( false );
     const [ resposta , setResposta ] = useState (false)
 
-    async function Login(email, senha) {
+    const [logado, setLogado] = useState(true);
+    const [error, setError] = useState(false);
+    const [user, setUser] = useState(false);
 
-        if (email != "" && senha != "") {
-            await fetch('http://10.139.75.31:5251/api/Usuario/Login', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/json'
-                },
+    async function Login(email, senha) {      
+        if (email != "" || senha != "") {
+            fetch('http://10.139.75.31:5251/api/Usuario/Login', {
+                method: 'POST',               
                 body: JSON.stringify({
-                    username: email,
-                    password: senha
-                })
-            })
-                .then(res => (res.ok == true) ? res.json() : false)
-                .then(json => {
-                    setLogado((json.token) ? true : false);
-                    setError((json.token) ? false : true);
+                    usuarioEmail: email,
+                    usuarioSenha: senha
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8'
                 }
-                )
-                .catch(err => setError(true))
-        } else {
-            setError(true)
+            })
+            .then((res) => res.json())   
+            .then((json) => {
+                if( json.usuarioId) {
+                    setUser( json );
+                    setLogado( true );
+                }
+            })                
+            .catch(err => setError( true ) )           
+        } else {           
+            setError( true )
         }
     }
-
 async function CriarUsuario(email, senha, tel, nome ){
     await fetch('http://10.139.75.31:5251/api/Usuario/CreateUsuario', {
         method: 'POST',
@@ -48,14 +49,34 @@ async function CriarUsuario(email, senha, tel, nome ){
         })
     })
     .then(res => res.json())
-      .then(json => setResposta(true) (json))
+      .then(json => alert("Cadastrado com suceso"))
       .catch(err => console.log(err))
 }
 
 
 
+async function CriarObservação(descricao, observacoesLocal, observacoesData, usuarioId, pessoaId  ){
+    await fetch('http://10.139.75.31:5251/api/ObservacaoesControler/CreateObservacaoes', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            observacoesDescricao: descricao,
+            observacoesLocal: observacoesLocal,
+            observacoesData: observacoesData,
+            usuarioId: usuarioId,
+            pessoaId: pessoaId,
+        })
+    })
+    .then(res => res.json())
+      .then(json => alert("Nova Observação realizada "))
+      .catch(err => console.log(err))
+}
+
+
     return (
-        <AuthContext.Provider value={{ logado: logado, Login, error: error , CriarUsuario, cadastrar: cadastrar, setCadastrar, setResposta, resposta }}>
+        <AuthContext.Provider value={{ logado: logado, Login, error: error , CriarUsuario, CriarObservação, cadastrar: cadastrar, setCadastrar, setResposta, resposta }}>
             {children}
         </AuthContext.Provider>
     )
