@@ -35,14 +35,14 @@ export default function Login() {
                 <Text style={css.forgotText}>Esqueceu a senha?</Text>
             </View>
             <TouchableOpacity style={css.btnLogin} onPress={RealizaLogin}>
-                <Text style={css.btnLoginText}>Log In</Text>
+                <Text style={css.btnLoginText}>Entrar</Text>
             </TouchableOpacity>
             <TouchableOpacity style={css.btnLogin} onPress={ () => setCadastrar( true ) }>
                 <Text style={css.btnLoginText}>Cadastro</Text>
             </TouchableOpacity>
             {error &&
                 <View style={css.error}>
-                    <Text style={css.errorText}>Revise os campos. Tente novamente!</Text>
+                    <Text style={css.errorText}>Email ou Senha incorretos</Text>
                 </View>
             }
 

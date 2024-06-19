@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet, Image } from 'react-native'
+import { View, Text, StyleSheet, Image, FlatList } from 'react-native'
 import React from 'react'
 import { useState, useEffect } from 'react';
 
 export default function Perfil() {
 
+  const[Usuario, setUsuario] = useState([])
   const [usuarioId, setUsuarioId] = useState("");
   const [usuarioNome, setUsuarioNome] = useState("");
   const [usuarioTelefone, setUsuarioTelefone] = useState("");
@@ -19,11 +20,7 @@ export default function Perfil() {
     })
       .then(res => res.json())
       .then(json => {
-        setUsuarioId(json.usuarioId);
-        setUsuarioNome(json.usuarioNome);
-        setUsuarioTelefone(json.usuarioTelefone);
-        setUsuarioEmail(json.usuarioEmail);
-        setUsuarioSenha(json.usuarioSenha);
+        setUsuario(json);
       })
       .catch(err => console.log(err))
   }
@@ -38,10 +35,19 @@ export default function Perfil() {
       <View style={css.logo}>
         <Image source={require("../../assets/LogoApp.png")} style={css.logoImg} />
       </View>
-      <Text style={css.text}>{usuarioNome}</Text>
-      <Text style={css.text}>{usuarioTelefone}</Text>
-      <Text style={css.text}>{usuarioSenha}</Text>
-      <Text style={css.text}>{usuarioEmail}</Text>
+      <FlatList
+        data={Usuario}
+        renderItem={({ item }) =>
+          <View style={css.caixaFlatLIst}>
+            <Text style={css.textOb}>{item.usuarioNome}</Text>
+            <Text style={css.pessoaNomeOb}>{item.usuarioTelefone}</Text>
+            <Text style={css.pessoaNomeOb}>{item.usuarioEmail}</Text>
+            <Text style={css.pessoaNomeOb}>{item.pesusuarioSenhasoaId}</Text>
+
+          </View>
+        }
+        keyExtractor={(item) => item.observacoesId}
+      />
     </View>
   )
 }

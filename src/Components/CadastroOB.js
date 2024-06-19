@@ -5,15 +5,13 @@ import { useState, useEffect } from 'react';
 import { AuthContext } from "../Context/AuthContext";
 
 
-export default function CadastroOB({ setObservacao, getPessoaId }) {
+export default function CadastroOB({pessoaId, usuarioId, setObservacao, getPessoaId }) {
 
 
     const { CriarObservação } = useContext(AuthContext);
     const [descricao, setdescricao] = useState("");
     const [observacoesLocal, setObservacoesLocal] = useState("");
     const [observacoesData, setObservacoesData] = useState("");
-    const [usuarioId, setUsuarioId] = useState("");
-    const [pessoaId, setPessoaId] = useState("");
     const [erro, setErro] = useState();
     const [resposta, setResposta] = useState(false)
 
@@ -32,10 +30,6 @@ export default function CadastroOB({ setObservacao, getPessoaId }) {
                         <TextInput style={css.input} textInput={descricao} value={descricao} onChangeText={(digitado) => setdescricao(digitado)} placeholder="observacoes Descricao" />
                         <TextInput style={css.input} textInput={observacoesLocal} value={observacoesLocal} onChangeText={(digitado) => setObservacoesLocal(digitado)} placeholder="Local:" />
                         <TextInput style={css.input} textInput={observacoesData} value={observacoesData} onChangeText={(digitado) => setObservacoesData(digitado)} placeholder="Data da observação:" />
-                        <TextInput style={css.input} textInput={usuarioId} value={usuarioId} onChangeText={(digitado) => setUsuarioId(digitado)} placeholder="Usuario:" />
-                        <TextInput style={css.input} textInput={pessoaId} value={pessoaId} onChangeText={(digitado) => setPessoaId(digitado)} placeholder="pessoa:" />
-                        <Text style={css.input}>{usuarioId}</Text>
-                        <Text style={css.input}>{pessoaId}</Text>
                     </View>
                     <View style={css.PaiCadastrar}>
                         <TouchableOpacity style={css.btn} onPress={Cadastrarob}>

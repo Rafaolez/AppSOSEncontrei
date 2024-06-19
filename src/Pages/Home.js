@@ -18,8 +18,11 @@ export default function Home() {
   const [pessoaFoto, setPessoaFoto] = useState([]);
   const [pessoaDtDesaparecimento, setPessoaDtDesaparecimento] = useState([]);
   const [pessoaDtEncontro, setPessoaDtEncontro] = useState([]);
-  const [pessoaStatus, setPessoaStatus] = useState([]);
+
+  const [pessoaStatus, setPessoaStatus] = useState("");
+
   const [usuarioId, setUsuarioId] = useState([]);
+
 
   const [observacoes, setobservacoes] = useState([]);
   const [observacoesDescricao, setobservacoesDescricao] = useState([]);
@@ -27,6 +30,7 @@ export default function Home() {
   const [observacoesData, setobservacoesData] = useState([]);
   const [usuarioIdOB, setusuarioId] = useState([]);
   const [pessoaIdOB, setpessoaId] = useState([]);
+
 
 
   const [detalhes, setDetalhes] = useState(true);
@@ -94,68 +98,76 @@ export default function Home() {
 
   return (
     <View style={css.container}>
-      {detalhes ?
-        <>
-          <View style={css.logo}>
-            <Image source={require("../../assets/LogoApp.png")} style={css.logoImg} />
-          </View>
-          <Text style={css.titulos}>Pessoa desaparecidas:</Text>
-          <FlatList
-            data={pessoa}
-            renderItem={({ item }) => <Produto getPessoaId={getPessoaId} getObservação={getObservação} observacoesId={item.observacoesId} pessoaNome={item.pessoaNome} pessoaFoto={item.pessoaFoto} pessoaId={item.pessoaId} setDetalhes={setDetalhes} />}
-            keyExtractor={(item) => item.pessoaId}
-            contentContainerStyle={{ height: (pessoa.length * 600) + 200 }}
-          />
-        </>
-        :
-        <View>
-          {observacao ?
+          {detalhes ?
             <>
-              <ScrollView>
-                <TouchableOpacity onPress={() => { setDetalhes(true); getPessoaId }} style={css.btnDelete}>
-                  <Text style={css.btbLoginText}>❮</Text>
-                </TouchableOpacity>
-                <View style={css.caixamaior}>
-                  <View style={css.boxImage}>
-                    <Image source={{ uri: pessoaFoto }} style={css.imagem} />
-                  </View>
-                  <Text style={css.pessoaNome01}>{pessoaNome}</Text>
-                  <Text style={css.pessoaNome}>{pessoaRoupa}</Text>
-                  <Text style={css.pessoaNome}>{pessoaCor}</Text>
-                  <Text style={css.pessoaNome}>{pessoaSexo}</Text>
-                  <Text style={css.pessoaNome}>{pessoaObservacao}</Text>
-                  <Text style={css.pessoaNome}>{pessoaLocalDesaparecimento}</Text>
-                  <Text style={css.pessoaNome}>{pessoaDtDesaparecimento}</Text>
-                  <Text style={css.pessoaNome}>{pessoaDtEncontro}</Text>
-                  <Text style={css.pessoaNome}>{pessoaStatus}</Text>
-                </View>    
-                <TouchableOpacity onPress={() => { setObservacao(false); getObservação }} style={css.btnObservacao}>
-                  <Text style={css.btbLoginText}>Nova Observção</Text>
-                </TouchableOpacity>
-              </ScrollView>
-              <View style={css.caixaMAiorOb}>
-                  <Text style={css.textOb}>Observação:</Text>
-                  <FlatList
-                    data={observacoes}
-                    renderItem={({ item }) =>
-                      <View>
-                        <Text style={css.textOb}>{item.observacoesDescricao}</Text>
-                        <Text style={css.textOb}>{item.observacoesLocal}</Text>
-                        <Text style={css.pessoaNomeOb}>{item.observacoesData}</Text>
-                        <Text style={css.pessoaNomeOb}>{item.usuarioId}</Text>
-                        <Text style={css.pessoaNomeOb}>{item.pessoaId}</Text>
-                      </View>
-                    }
-                    keyExtractor={(item) => item.observacoesId}                    
-                  />
-                </View>
+              <View style={css.logo}>
+                <Image source={require("../../assets/LogoApp.png")} style={css.logoImg} />
+              </View>
+              <Text style={css.titulos}>Pessoa desaparecidas:</Text>
+              <FlatList
+                data={pessoa}
+                renderItem={({ item }) => <Produto  getPessoaId={getPessoaId} getObservação={getObservação} observacoesId={item.observacoesId} pessoaNome={item.pessoaNome} pessoaFoto={item.pessoaFoto} pessoaId={item.pessoaId} setDetalhes={setDetalhes} />}
+                keyExtractor={(item) => item.pessoaId}
+                contentContainerStyle={{ height: (pessoa.length * 600) + 200 }}
+              />
             </>
             :
-            <>
-              <CadastroOB setObservacao={setObservacao} getPessoaId={getPessoaId} usuarioId={usuarioId} pessoaId={pessoaId} />
-            </>}
-        </View>
-      }
+            <View>
+              {observacao ?
+                <>
+                  <TouchableOpacity onPress={() => { setDetalhes(true); getPessoaId }} style={css.btnDelete}>
+                    <Text style={css.btbLoginText}>❮</Text>
+                  </TouchableOpacity>
+                  <ScrollView style={css.scrollView}>
+                    <View style={css.caixamaior}>
+                      <View style={css.boxImage}>
+                        <Image source={{ uri: pessoaFoto }} style={css.imagem} />
+                      </View>
+                      <Text style={css.pessoaNome01}>Nome da pessoa: {pessoaNome}</Text>
+                      <Text style={css.pessoaNome}>Roupa da pessoa: {pessoaRoupa}</Text>
+                      <Text style={css.pessoaNome}>Cor da pessoaCor: {pessoaCor}</Text>
+                      <Text style={css.pessoaNome}>Sexo da pessoa: {pessoaSexo}</Text>
+                      <Text style={css.pessoaNome}>Observacao sobre a pessoa: {pessoaObservacao}</Text>
+                      <Text style={css.pessoaNome}>Local de Desaparecimento: {pessoaLocalDesaparecimento}</Text>
+                      <Text style={css.pessoaNome}>Data de Desaparecimento: {pessoaDtDesaparecimento}</Text>
+                      <Text style={css.pessoaNome}>Data de Encontro: {pessoaDtEncontro}</Text>
+                      {pessoaStatus == 1 ?
+                      <Text style={css.pessoaNome} >Desaparecido</Text>
+                    :
+                    <Text>Encontrado</Text>}
+                    </View>
+                  </ScrollView>
+                  <View style={css.caixaMAiorOb}>
+                    <Text style={css.textOb}>Observação:</Text>
+                    <FlatList
+                      data={observacoes}
+                      renderItem={({ item }) =>
+                        <View style={css.caixaFlatLIst}>
+                          <Text style={css.textOb}>{item.observacoesDescricao}</Text>
+                          <Text style={css.textOb}>{item.observacoesLocal}</Text>
+                          <Text style={css.pessoaNomeOb}>{item.observacoesData}</Text>
+                          <Text style={css.pessoaNomeOb}>{item.usuarioId}</Text>
+                          <Text style={css.pessoaNomeOb}>{item.pessoaId}</Text>
+
+                        </View>
+                      }
+                      keyExtractor={(item) => item.observacoesId}
+                    />
+                    <TouchableOpacity onPress={() => { setObservacao(false); getObservação }} style={css.btnObservacao}>
+                      <Text style={css.btbLoginText}>Nova Observção</Text>
+                    </TouchableOpacity>
+                  </View>
+
+                </>
+                :
+                <>
+                  <CadastroOB pessoaId={pessoaId} usuarioId={usuarioId} setObservacao={setObservacao} getPessoaId={getPessoaId}  />
+                </>}
+            </View>
+          }
+        
+      
+
     </View>
   )
 }
@@ -166,6 +178,11 @@ const css = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  scrollView: {
+    height: 500,
+    backgroundColor: "red",
+
   },
   stories: {
     width: "100%",
@@ -179,8 +196,8 @@ const css = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 50,
-    marginBottom: 15,
+    marginTop: 30,
+    marginBottom: 10,
     marginRight: 250,
   },
   btbLoginText: {
@@ -188,7 +205,7 @@ const css = StyleSheet.create({
     fontSize: 30,
   },
   pessoaNomeOb: {
-    color:"black",
+    color: "black",
   },
   pessoaNome01: {
     marginTop: -90,
@@ -227,8 +244,8 @@ const css = StyleSheet.create({
   },
 
   caixaMAiorOb: {
-    width: 200,
-    height: 200,
+    width: 350,
+    height: 300,
     backgroundColor: "white",
     marginTop: 25,
   },
@@ -251,5 +268,13 @@ const css = StyleSheet.create({
   titulos: {
     fontSize: 25,
     marginTop: 20,
+  },
+  caixaFlatLIst: {
+    width: "90%",
+    height: 140,
+    marginBottom: 15,
+    borderRadius: 15,
+    borderColor: "#000D",
+    borderWidth: 2,
   },
 })

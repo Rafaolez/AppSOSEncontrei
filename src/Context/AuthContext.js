@@ -7,7 +7,7 @@ function AuthProvider({ children }) {
     const [cadastrar, setCadastrar ] = useState( false );
     const [ resposta , setResposta ] = useState (false)
 
-    const [logado, setLogado] = useState(true);
+    const [logado, setLogado] = useState(false);
     const [error, setError] = useState(false);
     const [user, setUser] = useState(false);
 
